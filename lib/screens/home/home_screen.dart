@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:schedule_generator_with_gemini/network/gemini_service.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> weeklyMeal = {};
   TextEditingController _mealController = TextEditingController();
   // TextEditingController _durationController = TextEditingController();
+
   String? _priority;
   bool isLoading = false;
   String errorMessage = "";
@@ -26,18 +30,53 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> breakfast = {};
   Map<String, dynamic> lunch = {};
   Map<String, dynamic> dinner = {};
-  List<String> suggestions = [];
+  // Map<String, dynamic> suggestions = {};
+
+  Future<void> _loadMealGenerator() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedMealGenerator = prefs.getString('mealGenerator');
+    setState(() {
+        weeklyMeal = Map<String, dynamic>.from(jsonDecode(savedMealGenerator!));
+    });
+  }
+  Future<void> _saveMealGenerator() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('mealGenerator', jsonEncode(weeklyMeal));
+  }
+
+  Future<void> _loadSavedMeal() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedMeal = prefs.getString('todayMealPlan');
+    if(savedMeal != null){
+      setState(() {
+        _tasks = List<Map<String, dynamic>>.from(jsonDecode(savedMeal));
+      });
+    }
+  }
+  // Menyimpan makan
+  Future<void> _saveMealPlan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('todayMealPlan', jsonEncode(_tasks));
+  }
+
+  Future<void> _deleteMealPlan(int index) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _tasks.removeAt(index);
+    });
+    _saveMealPlan();
+  }
+
 
   void _addTask() {
     if(_mealController.text.isNotEmpty && 
-       _priority != null && _mealTime != null) {
+       _priority != null && _mealTime != null)  {
          print("Meal: \${_mealController.text}, MealTime: \$_mealTime, Priority: \$_priority");
         setState(() {
           _tasks.add({
           "task": _mealController.text,
           "mealTime": _mealTime ?? "",
           "priority": _priority ?? "",
-          "deadline": ""
           });
         });
         print('task added : ${_tasks}');
@@ -45,26 +84,28 @@ class _HomeScreenState extends State<HomeScreen> {
         _mealController.clear();
         _mealTime = null;
         _priority = null;
-       }
 
+         _saveMealPlan();
+       }
   }
-  Future<void> _generateMeal()async{
+  Future<void> _generateMeal() async {
     setState(() {
       isLoading = true;
     });
     try{
-
       final result = await GeminiService.generateMeal(_tasks);
 
        print("Result from API: $result");
        print("Result Type: ${result.runtimeType}");
       // if(result == null || !result.containsKey('weekly_meal_plan')){
       //   setState(() {
-      //     errorMessage = result['error'] ?? "Unknown error occured";
+      //     // weeklyMeal = Map<String, dynamic>.from(result['weekly_meal_plan'] ?? {});
+      //     errorMessage = result['error'];
       //     isLoading = false;
       //     weeklyMeal.clear();
-      //     suggestions.clear();
+      //     // suggestions.clear();
       //   });
+      //   return;
       // }
       if(result.containsKey('error')){
        print("Result from GeminiService: $result");
@@ -72,36 +113,45 @@ class _HomeScreenState extends State<HomeScreen> {
           errorMessage = result['error'];
           isLoading = false;
           weeklyMeal.clear();
+          breakfast.clear();
+          lunch.clear();
+          dinner.clear();
           // _priority = null;
-          suggestions.clear();
+          // suggestions.clear();
        });
        return;
       }
       setState(() {
         weeklyMeal = Map<String, dynamic>.from(result['weekly_meal_plan'] ?? {});
-        suggestions = List<String>.from(result['suggestions'] ?? []);
         isLoading = false;
       });
        print('Weekly meal data : $weeklyMeal');
-       weeklyMeal.forEach((day, meals) {
-      print("Processing: $day");
+      weeklyMeal.forEach((day, meals) {
       print("Breakfast: ${meals['breakfast']}");
       print("Lunch: ${meals['lunch']}");
-      print("Dinner: ${meals['dinner']}");
-});
+      print("Dinner: ${meals['dinner']}");    
+    });
     }catch(e){
       setState(() {
-          errorMessage = "Failed to generate schedule\n$e";
+          errorMessage = "Failed to generate meal\n$e";
           isLoading = false;
           weeklyMeal.clear();
        });
     }
   }
   @override
+  void initState(){
+    _loadSavedMeal();
+    _loadMealGenerator();
+    super.initState();
+  }
+
+  @override
   void dispose(){
     _mealController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text("Good morning",style: TextStyle(color: Colors.white, fontSize: 20),),
                       ],
                     ),
-                    Icon(Icons.notifications,
+                    Icon(Icons.bookmark,
                     size: 25,
                     color: Colors.white,
                          ),
@@ -246,9 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: Text(task["task"]),
                         subtitle: Text("Meal time: ${task["mealTime"] ?? ""}, Priority: ${task["priority"] }", style: TextStyle(color: Colors.grey, fontSize: 12),),
                         trailing: IconButton(onPressed: (){
-                          setState(() {
-                            _tasks.removeAt(index);
-                          });
+                          _deleteMealPlan(index);
                         }, icon: Icon(Icons.delete, color: Colors.red,)),
                       ),
                     ),
@@ -281,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            if(errorMessage.isNotEmpty && !isLoading )
+            if(errorMessage.isNotEmpty && !isLoading && (breakfast.isNotEmpty || lunch.isNotEmpty || dinner.isNotEmpty))
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
@@ -309,40 +357,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             if(isLoading)
-            Padding(
+            const Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Shimmer.fromColors(child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                       ), child: SizedBox(height: 10, width: 250,),
-                      ), 
-                      baseColor: Colors.grey[300]!, highlightColor: Colors.grey[400]!
-                  ),
-                  Shimmer.fromColors(child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                       ), child: SizedBox(height: 30, width: 200,),
-                      ), 
-                      baseColor: Colors.grey[300]!, highlightColor: Colors.grey[400]!
-                  ),
-                  Shimmer.fromColors(child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                       ), child: SizedBox(height: 20, width: 150,),
-                      ), 
-                      baseColor: Colors.grey[300]!, highlightColor: Colors.grey[200]!
-                  ),
-                  Shimmer.fromColors(child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                       ), child: SizedBox(height: 10, width: 300,),
-                      ), 
-                      baseColor: Colors.grey[300]!, highlightColor: Colors.grey[200]!
-                  ),
-                ],
+              child: Center(
+                child: CircularProgressIndicator()
               ),  
             ),
             if(!isLoading && errorMessage.isEmpty && weeklyMeal.isNotEmpty)
@@ -350,16 +368,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: weeklyMeal.keys.map((day){
-                    print("Membuat UI untuk: $day");
+                    print("Membuat UI untuk: $day ");
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildScheduleGenerator("Breakfast", weeklyMeal[day]?['breakfast'], day),
-                        _buildScheduleGenerator("Lunch", weeklyMeal[day]?['lunch'], day),
-                        _buildScheduleGenerator("Dinner", weeklyMeal[day]?['dinner'], day),
+                        _buildScheduleGenerator("Breakfast", weeklyMeal[day]?['breakfast'], day, weeklyMeal[day]?['time'] ?? "No time availabe"),
+                        _buildScheduleGenerator("Lunch", weeklyMeal[day]?['lunch'], day, weeklyMeal[day]?['time'] ?? "No time availabe"),
+                        _buildScheduleGenerator("Dinner", weeklyMeal[day]?['dinner'], day, weeklyMeal[day]?['time'] ?? "No time availabe"),
                         const SizedBox(height: 10,),
-                        if(suggestions.isNotEmpty)
-                        _buildSuggestionGenerator("Suggestion", suggestions ?? []),
+                        // if(suggestions.isNotEmpty)
+                        // _buildSuggestionGenerator("Suggestion", suggestions),
                       ]
                     );
                   }).toList()
@@ -373,7 +391,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   }
-Card _buildSuggestionGenerator(String title, List<String> suggestions) {
+Card _buildSuggestionGenerator(String title, Map<String, dynamic> suggestions) {
+  if(suggestions.isEmpty){
+    return Card(
+      color: Color.fromARGB(255, 54, 42, 133),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Text(
+          "No suggestions available",
+          style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
   return Card(
     color: Color.fromARGB(255, 54, 42, 133),
     shape: RoundedRectangleBorder(
@@ -392,26 +425,23 @@ Card _buildSuggestionGenerator(String title, List<String> suggestions) {
               fontWeight: FontWeight.w700,
             ),
           ),
-          ...suggestions.map(
-            (suggestion) => ListTile(
-              title: Text(
-                suggestion ?? "There is no Suggestion", // Penanganan null
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
+          ...suggestions.values.map((value){
+            return ListTile(
+            title: Text(
+              value.toString()
+            )
+           );
+          }).toList(),
         ],
       ),
     ),
   );
+  
 }
 
-Card _buildScheduleGenerator(String title, dynamic meal, String day) {
-  if (meal == null || meal is! Map<String, dynamic>) {
+Card _buildScheduleGenerator(String title, dynamic meal, String day, String time) {
+  if (meal == null || meal is! Map<String, dynamic>) 
+  {
     return Card(
       color: Color.fromARGB(255, 54, 42, 133),
       shape: RoundedRectangleBorder(
@@ -432,7 +462,7 @@ Card _buildScheduleGenerator(String title, dynamic meal, String day) {
             ),
             const SizedBox(height: 10),
             Text(
-              "There is no suggestion!",
+              "no meal data available",
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
             ),
           ],
@@ -478,7 +508,7 @@ Card _buildScheduleGenerator(String title, dynamic meal, String day) {
           const SizedBox(height: 10),
           ListTile(
             title: Text(
-              meal['meal'] ?? "Unknown meal", // Penanganan null
+              meal['meal'] ?? "${meal}" , 
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.white,
@@ -486,7 +516,7 @@ Card _buildScheduleGenerator(String title, dynamic meal, String day) {
               ),
             ),
             subtitle: Text(
-              meal['time'] ?? "Unknown time",
+              meal['time'] ?? "Unknown Time",
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.white70,
@@ -497,4 +527,5 @@ Card _buildScheduleGenerator(String title, dynamic meal, String day) {
       ),
     ),
   );
+
 }

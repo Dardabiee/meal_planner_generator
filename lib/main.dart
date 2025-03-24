@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:schedule_generator_with_gemini/screens/home/home_screen.dart';
 import 'package:device_preview/device_preview.dart';
 
-void main() {
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     DevicePreview(
       enabled: true,

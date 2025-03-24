@@ -20,6 +20,8 @@ dev_dependencies:
   google_generative_ai: ^0.4.6
   shimmer: ^3.0.0
   device_preview: ^1.2.0
+  shared_preferences: ^2.5.2
+  
 
 flutter:
   uses-material-design: true

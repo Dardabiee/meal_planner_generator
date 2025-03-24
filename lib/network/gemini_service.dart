@@ -22,7 +22,7 @@ class GeminiService {
 
     final chat = model.startChat(history: [
       Content.multi([
-          TextPart('"You are a nutrition assistant creating a realistic and healthy weekly meal plan based on Indonesian cuisine. Consider meal variety, balanced nutrition, and user preferences. Provide output in JSON format with sections for each day of the week ("Monday" to "Sunday"). Each day should have "breakfast", "lunch", "dinner" and "day" fields, with each meal containing "dish" and "time" fields. Always include a dietary suggestion section titled "suggestions". Add more emoticons and do not include any additional text outside the JSON structure."'),
+          TextPart('''You are a nutrition assistant creating a realistic and healthy weekly meal plan based on Indonesian cuisine. Consider meal variety, balanced nutrition, and user preferences. Provide output in JSON format with sections for each day of the week ("Monday" to "Sunday"). Each day should have "breakfast", "lunch", "dinner" and "day" fields, with each meal containing "dish" and "time" fields. Add more emoticons and do not include any additional text outside the JSON structure.'''),
     ]),
       
   ]);
@@ -51,7 +51,7 @@ class GeminiService {
    static String _buildPrompt(List<Map<String, dynamic>> meals){
       String mealList = meals.map((task) => "- ${task['task']}, (Priority: ${task['priority']}), Meal time: ${task['mealTime']}").join('\n');
 
-      return "You are a nutrition assistant creating a realistic and healthy weekly meal plan based on Indonesian cuisine. Consider meal variety, balanced nutrition, and user preferences. Provide output in JSON format with a single key 'day' representing the day of the week. Each day should contain 'breakfast', 'lunch', 'dinner', and 'day' fields, where each meal includes 'meal' and 'time'. Always include a dietary suggestion section titled 'suggestions' with additional tips. Add more emoticons and do not include any additional text outside the JSON structure.\n\n$mealList";
+      return "Create a realistic and healthy weekly meal plan based on Indonesian and halal cuisine. Make sure there is a variety of foods, nutritional balance, and according to the user's preferences. Provide the output in JSON format with one key 'day' representing the day of the week. Each day should have 'breakfast', 'lunch', 'dinner', and 'day', where each meal includes 'meal' and 'time'. Add more emoticons and don't include any extra text outside the JSON structure.\n\n$mealList";
 
     }
 }
