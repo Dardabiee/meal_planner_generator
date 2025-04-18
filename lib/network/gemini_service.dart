@@ -22,7 +22,7 @@ class GeminiService {
 
     final chat = model.startChat(history: [
       Content.multi([
-          TextPart('''You are a nutrition assistant creating a realistic and healthy weekly meal plan based on Indonesian cuisine. Consider meal variety, balanced nutrition, and user preferences. Provide output in JSON format with sections for each day of the week ("Monday" to "Sunday"). Each day should have "breakfast", "lunch", "dinner" and "day" fields, with each meal containing "dish" and "time" fields. Add more emoticons and do not include any additional text outside the JSON structure.'''),
+          TextPart('''You are a nutrition assistant creating a realistic and healthy weekly meal plan based on Indonesian cuisine. Consider meal variety, balanced nutrition, and user preferences. Provide output in JSON format with sections for each day of the week ("Monday" to "Sunday"). Each day should have "breakfast", "lunch", "dinner" and "day" fields, with each meal containing "dish" and "time" fields. Add more emoticons and do not include any additional text outside the JSON structure..'''),
     ]),
       
   ]);

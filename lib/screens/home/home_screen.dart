@@ -95,8 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
     try{
       final result = await GeminiService.generateMeal(_tasks);
 
-       print("Result from API: $result");
-       print("Result Type: ${result.runtimeType}");
+      //  print("Result from API: $result");
+      //  print("Result Type: ${result.runtimeType}");
       // if(result == null || !result.containsKey('weekly_meal_plan')){
       //   setState(() {
       //     // weeklyMeal = Map<String, dynamic>.from(result['weekly_meal_plan'] ?? {});
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //   return;
       // }
       if(result.containsKey('error')){
-       print("Result from GeminiService: $result");
+      //  print("Result from GeminiService: $result");
        setState(() {
           errorMessage = result['error'];
           isLoading = false;
@@ -127,9 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
       });
        print('Weekly meal data : $weeklyMeal');
       weeklyMeal.forEach((day, meals) {
-      print("Breakfast: ${meals['breakfast']}");
-      print("Lunch: ${meals['lunch']}");
-      print("Dinner: ${meals['dinner']}");    
+      // print("Breakfast: ${meals['breakfast']}");
+      // print("Lunch: ${meals['lunch']}");
+      // print("Dinner: ${meals['dinner']}");    
     });
     }catch(e){
       setState(() {
@@ -183,10 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text("Good morning",style: TextStyle(color: Colors.white, fontSize: 20),),
                       ],
                     ),
-                    Icon(Icons.bookmark,
-                    size: 25,
-                    color: Colors.white,
-                         ),
                       ],
                     ),
                 SizedBox(height: 10),
@@ -391,53 +387,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   }
-Card _buildSuggestionGenerator(String title, Map<String, dynamic> suggestions) {
-  if(suggestions.isEmpty){
-    return Card(
-      color: Color.fromARGB(255, 54, 42, 133),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Text(
-          "No suggestions available",
-          style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
-        ),
-      ),
-    );
-  }
-  return Card(
-    color: Color.fromARGB(255, 54, 42, 133),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Padding(
-      padding: EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Suggestions",
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          ...suggestions.values.map((value){
-            return ListTile(
-            title: Text(
-              value.toString()
-            )
-           );
-          }).toList(),
-        ],
-      ),
-    ),
-  );
-  
-}
 
 Card _buildScheduleGenerator(String title, dynamic meal, String day, String time) {
   if (meal == null || meal is! Map<String, dynamic>) 
@@ -508,7 +457,7 @@ Card _buildScheduleGenerator(String title, dynamic meal, String day, String time
           const SizedBox(height: 10),
           ListTile(
             title: Text(
-              meal['meal'] ?? "${meal}" , 
+              meal['dish'] ?? "Failed to generate, try to regenerate!" , 
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 color: Colors.white,

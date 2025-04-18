@@ -1,0 +1,2 @@
+/Users/muhammad.darda/Downloads/FLUTTER_PROJECT/schedule_genetaror/schedule_generator_with_gemini/android/app/.cxx/RelWithDebInfo/565p9235/x86/CMakeFiles/edit_cache.dir
+/Users/muhammad.darda/Downloads/FLUTTER_PROJECT/schedule_genetaror/schedule_generator_with_gemini/android/app/.cxx/RelWithDebInfo/565p9235/x86/CMakeFiles/rebuild_cache.dir

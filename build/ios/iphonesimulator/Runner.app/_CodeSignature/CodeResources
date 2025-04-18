@@ -46,7 +46,7 @@
 		</data>
 		<key>Frameworks/App.framework/App</key>
 		<data>
-		+W7F1FDTkjKfhT1xwSVYG6yiWkw=
+		KYn1nXMVC9l9rtJSXoOW6xG7CLo=
 		</data>
 		<key>Frameworks/App.framework/Info.plist</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Frameworks/App.framework/_CodeSignature/CodeResources</key>
 		<data>
-		VEUdAH64iZH2JoIBdHyHEaI7feY=
+		mV3XReolknzKcEsSy8zHsNos70M=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
 		<data>
@@ -86,7 +86,7 @@
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/kernel_blob.bin</key>
 		<data>
-		envO1nl7wKuQTEVfRtWez541jAU=
+		jS0asta6rPLdAbUIVgVRYq2bw+I=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/packages/font_awesome_flutter/lib/fonts/fa-brands-400.ttf</key>
 		<data>
@@ -110,7 +110,7 @@
 		</data>
 		<key>Frameworks/Flutter.framework/Flutter</key>
 		<data>
-		4quGlub/IwnoqEYVFRSdPvyu8gU=
+		NUynns6FWA9nGjsRB9vvowe92BY=
 		</data>
 		<key>Frameworks/Flutter.framework/Headers/Flutter.h</key>
 		<data>
@@ -182,7 +182,7 @@
 		</data>
 		<key>Frameworks/Flutter.framework/Info.plist</key>
 		<data>
-		Fn6CJcrmOY7R/UCpVvDdwVm3fwA=
+		0jXQ5vZwydkAYplqGsks5UWxAuk=
 		</data>
 		<key>Frameworks/Flutter.framework/Modules/module.modulemap</key>
 		<data>
@@ -194,7 +194,7 @@
 		</data>
 		<key>Frameworks/Flutter.framework/_CodeSignature/CodeResources</key>
 		<data>
-		DL4bsE6gOoPUAg6JuKJAbSJtTaY=
+		SQuQawhr1DzE3LayRIYG8ccB9sU=
 		</data>
 		<key>Frameworks/Flutter.framework/icudtl.dat</key>
 		<data>
@@ -333,7 +333,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			O/RLKo7NLpyaTkKbS4yKxI9ki+sjtDhmwgJvhOSYNPA=
+			tsiBHeyya9Xx3SZ2gQTykl9ZA3xLth7hb33wSmEvprk=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/Info.plist</key>
@@ -347,7 +347,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			MNMuq/Ap9ZpW0YWjKY6K0SS/ZL/dQfUPaoGs7mJ5Ztg=
+			o9w5Us3NsmMOLZPfn+dwmjUfUSyJ7TatevupvuVNdvs=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
@@ -403,7 +403,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			1KZ8n9Io91IKCPFb6b1q7zb6O7lhlbCcKNiLQ2TEIMg=
+			GyEGCSXuWb6zfzJz3i+Lo0JjMmsqd1PzA71dC2MXdY8=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/packages/font_awesome_flutter/lib/fonts/fa-brands-400.ttf</key>
@@ -445,7 +445,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Lc7KV1yE5k27Y+TUIs3vims36oZVZ77QJp+19LMMnP0=
+			rUb8ueOXAjzdI80Hl83CILQjiBoa79i6sfhsot4peP0=
 			</data>
 		</dict>
 		<key>Frameworks/Flutter.framework/Headers/Flutter.h</key>
@@ -571,7 +571,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			v075kvkyPu8t6WRfJ+yP6wJjwWRMctNxq8i7q37e0U0=
+			y+eF4jzwPHfVcnYSAagSNdMOhoYsF6X2Q3HQT9wi5tE=
 			</data>
 		</dict>
 		<key>Frameworks/Flutter.framework/Modules/module.modulemap</key>
@@ -592,7 +592,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9dHVR01bZ2BYcHmcZg2ujaVI5AEgH+42skJ864Cy8oY=
+			XTrflKYMORAy7nM4/eeJjcc8f6FQRgPxiVXSn0OTP7o=
 			</data>
 		</dict>
 		<key>Frameworks/Flutter.framework/icudtl.dat</key>

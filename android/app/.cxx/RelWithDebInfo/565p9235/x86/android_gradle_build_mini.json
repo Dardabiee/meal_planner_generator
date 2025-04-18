@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/muhammad.darda/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/muhammad.darda/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/muhammad.darda/Downloads/FLUTTER_PROJECT/schedule_genetaror/schedule_generator_with_gemini/android/app/.cxx/RelWithDebInfo/565p9235/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/muhammad.darda/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/muhammad.darda/Downloads/FLUTTER_PROJECT/schedule_genetaror/schedule_generator_with_gemini/android/app/.cxx/RelWithDebInfo/565p9235/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
